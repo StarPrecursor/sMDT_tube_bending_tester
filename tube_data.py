@@ -1,5 +1,10 @@
 import numpy as np
 import cv2
+import sqlite3
+
+from datetime import datetime
+
+
 
 
 class Tube_Cache(object):
@@ -89,7 +94,7 @@ class Tube_Cache(object):
             img = cv2.putText(
                 img, status, org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, color_s,
             )
-        return img, status
+        return [img, status, dy, dist]
 
 
 def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
@@ -103,3 +108,39 @@ def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
         img, f"{(dist):.02f} mm", org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,
     )
     return img
+
+
+
+
+
+def write_db(box = 'M123456', tubeid = -100, dist = -999.9 , dy = -999.9 ):
+    con = sqlite3.connect('{}.db'.format(box))
+    cur = con.cursor()
+
+    # Check if 'tubes' table exsit, otherwise create it  
+    tabl_exist = False
+    table_list = [a for a in cur.execute("SELECT name FROM sqlite_master WHERE type = 'table'")]
+    for tmp_1 in table_list:
+        if 'tubes' in tmp_1:
+            tabl_exist = True
+    
+    if tabl_exist == False:
+        cur.execute('''CREATE TABLE tubes(box text, date text, time text, tubeid interger, dist real, dy real)''')
+
+    today = datetime.today()
+    dt_string = today.strftime("%Y/%m/%d")
+    now = datetime.now() 
+    time_string = now.strftime("%H:%M:%S")
+    
+
+    tubeval_list = [
+        (box, dt_string,time_string, tubeid, dist, dy)
+    ]
+    
+    cur.executemany("insert into tubes values (?, ?, ?, ?, ?, ?)", tubeval_list)
+
+
+    # Save (commit) the changes
+    con.commit()
+
+    con.close()
