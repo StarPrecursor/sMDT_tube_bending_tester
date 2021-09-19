@@ -1,1 +1,7 @@
+# temporary files
+test/*
+.vscode/*
 *.pyc
+
+# run folder
+run/*
