@@ -8,9 +8,11 @@ import numpy as np
 
 logger = logging.getLogger("bend_tester")
 
+SCREEN_SIZE = (95, 95 * 9 /16)
+AMP = 20
 
 class Tube_Cache(object):
-    def __init__(self, base_img, real_size=(90, 68), aml=20, threshold=1.8) -> None:
+    def __init__(self, base_img, real_size=(97.5, 68), aml=AMP, threshold=1.8) -> None:
         super().__init__()
         # static members
         self.r_range = base_img.shape[0]  # row range
