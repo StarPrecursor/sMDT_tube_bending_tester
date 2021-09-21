@@ -16,8 +16,11 @@ logging.basicConfig(format=logging_format, datefmt="%Y-%m-%d:%H:%M:%S")
 # TODO: need to enable customized config inputs
 webcam = True
 path = ""
-cap = cv2.VideoCapture("./example_data/exp_video.mp4")
-box = "test_box"
+#cap = cv2.VideoCapture("./example_data/exp_video.mp4")
+cap = cv2.VideoCapture(1)
+#box = "test_box1"
+box = "test_box2"
+tube = -1
 
 tube_cache = None
 
@@ -53,11 +56,12 @@ while True:
 
     # React to keyboard inputs
     if ky == ord("\r"):
-        tube_cache.reset_x()
         if status != "PASS":
-            winsound.Beep(2500, 1000)
+            print("\a")
+            #winsound.Beep(2500, 1000)
         logger.info(f"New test: status = {status}, dy = {dy * 1000:05f} um")
-        tube_cache.write_db(status, dy)
+        tube_cache.write_db(tube_id=tube)
+        tube_cache.reset_x()
     elif ky == ord("r"):
         logger.info("Resetting tube data")
         tube_cache.reset_x()

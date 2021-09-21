@@ -8,8 +8,9 @@ import numpy as np
 
 logger = logging.getLogger("bend_tester")
 
-SCREEN_SIZE = (95, 95 * 9 /16)
+SCREEN_SIZE = (95, 95 * 9 / 16)
 AMP = 20
+
 
 class Tube_Cache(object):
     def __init__(self, base_img, real_size=(97.5, 68), aml=AMP, threshold=1.8) -> None:
@@ -104,7 +105,12 @@ class Tube_Cache(object):
                 color_s = (0, 0, 255)
             org = (self.c_range // 2 - 80, self.r_range - 20)
             img = cv2.putText(
-                img, status, org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, color_s,
+                img,
+                status,
+                org,
+                cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                3,
+                color_s,
             )
             # update tube measurement
             self.status = status
@@ -126,19 +132,29 @@ class Tube_Cache(object):
         self.cur = self.con.cursor()
         # create [tubes] table if not exists
         self.cur.execute(
-            """CREATE TABLE IF NOT EXISTS tubes(box, date, time, tube_id, status, dy)"""
+            """CREATE TABLE IF NOT EXISTS tubes(box, date, time, tube_id, status, min_x, max_x, range_x, dy)"""
         )
 
     def disconnect_db(self):
         self.con.close()
 
-    def write_db(self, status, dy, tube_id=-1):
+    def write_db(self, tube_id=-1):
         dt_string = datetime.today().strftime("%Y/%m/%d")
         time_string = datetime.now().strftime("%H:%M:%S")
-        values = (self.box, dt_string, time_string, tube_id, status, dy)
+        values = (
+            self.box,
+            dt_string,
+            time_string,
+            tube_id,
+            self.status,
+            self.min_x,
+            self.max_x,
+            self.range_x,
+            self.dy,
+        )
         logger.debug(f"Inserting values ...")
         self.cur.execute(
-            "INSERT INTO tubes (box, date, time, tube_id, status, dy) Values (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO tubes (box, date, time, tube_id, status, min_x, max_x, range_x, dy) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             values,
         )
         self.con.commit()
@@ -146,12 +162,31 @@ class Tube_Cache(object):
 
 def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
     img = cv2.arrowedLine(
-        img, p1, p2, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
+        img,
+        p1,
+        p2,
+        color,
+        thickness=thickness,
+        line_type=8,
+        shift=0,
+        tipLength=0.05,
     )
     img = cv2.arrowedLine(
-        img, p2, p1, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
+        img,
+        p2,
+        p1,
+        color,
+        thickness=thickness,
+        line_type=8,
+        shift=0,
+        tipLength=0.05,
     )
     img = cv2.putText(
-        img, f"{(dist):.02f} mm", org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,
+        img,
+        f"{(dist):.02f} mm",
+        org,
+        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+        1,
+        color,
     )
     return img
