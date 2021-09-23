@@ -1,0 +1,12 @@
+job:
+    output_dir: "./run"
+    box_id: "000000"
+    operator: ["Zhe Yang", "Zirui Wang"]
+
+    use_video: True
+    webcam: False
+    webcam_id: 1
+    video_path: "./example_data/exp_video.mp4"
+
+    use_img: False
+    img_path: None
