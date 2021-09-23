@@ -8,6 +8,9 @@ import numpy as np
 
 logger = logging.getLogger("bend_tester")
 
+SCREEN_SIZE = (95, 95 * 9 / 16)
+AMP = 20
+
 
 class Tube_Cache(object):
     def __init__(self, base_img, cfg) -> None:
@@ -104,7 +107,12 @@ class Tube_Cache(object):
                 color_s = (0, 0, 255)
             org = (self.c_range // 2 - 80, self.r_range - 20)
             img = cv2.putText(
-                img, status, org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, color_s,
+                img,
+                status,
+                org,
+                cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                3,
+                color_s,
             )
             # update tube measurement
             self.status = status
@@ -164,12 +172,31 @@ class Tube_Cache(object):
 
 def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
     img = cv2.arrowedLine(
-        img, p1, p2, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
+        img,
+        p1,
+        p2,
+        color,
+        thickness=thickness,
+        line_type=8,
+        shift=0,
+        tipLength=0.05,
     )
     img = cv2.arrowedLine(
-        img, p2, p1, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
+        img,
+        p2,
+        p1,
+        color,
+        thickness=thickness,
+        line_type=8,
+        shift=0,
+        tipLength=0.05,
     )
     img = cv2.putText(
-        img, f"{(dist):.02f} mm", org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,
+        img,
+        f"{(dist):.02f} mm",
+        org,
+        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+        1,
+        color,
     )
     return img

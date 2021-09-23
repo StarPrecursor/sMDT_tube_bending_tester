@@ -80,7 +80,8 @@ while True:
     # React to keyboard inputs
     if ky == ord("\r"):
         if status != "PASS":
-            winsound.Beep(2500, 1000)
+            print("\a")
+            # winsound.Beep(2500, 1000)
         logger.info(f"New test: status = {status}, dy = {dy * 1000:05f} um")
         tube_cache.write_db()
     elif ky == ord("r"):

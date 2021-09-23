@@ -1,6 +1,6 @@
 main:
 
-    real_size: [90, 68]  # 16:9
+    real_size: [97.5, 68]  # 16:9
     aml: 20
     threshold: 1.8  # mm 
     interval: 50  # ms
