@@ -33,6 +33,8 @@ class Tube_Cache(object):
         self.range_x = float("inf")
         self.status = "Unknown"
         self.dy = 0
+        self.box = cfg.job.box_id
+        self.tube_id = -1
 
     def update_x(self, x):
         if x and x > self.max_x:
@@ -51,6 +53,23 @@ class Tube_Cache(object):
 
     def get_limit_img(self, color_l=(255, 0, 0), color_a=(0, 255, 0), thickness=2):
         img = np.copy(self.base_img)
+        # draw meta info
+        img = cv2.putText(
+            img,
+            f"BOX: {self.box}",
+            (10, 20),
+            cv2.FONT_HERSHEY_COMPLEX_SMALL,
+            1,
+            (0, 255, 0),
+        )
+        img = cv2.putText(
+            img,
+            f"TUBE: {self.tube_id}",
+            (10, 40),
+            cv2.FONT_HERSHEY_COMPLEX_SMALL,
+            1,
+            (0, 255, 0),
+        )
         # draw upper limit
         if 0 <= self.max_x < self.c_range:
             img = cv2.line(
@@ -114,6 +133,7 @@ class Tube_Cache(object):
                 3,
                 color_s,
             )
+            
             # update tube measurement
             self.status = status
             self.dy = dy
@@ -136,19 +156,27 @@ class Tube_Cache(object):
         self.cur.execute(
             """CREATE TABLE IF NOT EXISTS tubes(box, date, time, operator, tube_id, status, up_pix, low_pix, dy, threshold, unit_x)"""
         )
+        self.update_tube_id()
 
     def disconnect_db(self):
         self.con.close()
 
+    def update_tube_id(self):
+        if not self.cur:
+            self.tube_id = -1
+        else:
+            max_id = self.cur.execute("SELECT MAX(tube_id) FROM tubes").fetchall()
+            max_id = max_id[0][0]
+            if max_id is None:
+                max_id = 0
+            self.tube_id = max_id + 1
+
+
     def write_db(self, tube_id=-1):
         dt_string = datetime.today().strftime("%Y/%m/%d")
         time_string = datetime.now().strftime("%H:%M:%S")
-        max_id = self.cur.execute("SELECT MAX(tube_id) FROM tubes").fetchall()
-        max_id = max_id[0][0]
-        if max_id is None:
-            max_id = 0
         if tube_id == -1:
-            tube_id = max_id + 1
+            tube_id = self.tube_id
         values = (
             self.box,
             dt_string,
@@ -168,6 +196,7 @@ class Tube_Cache(object):
             values,
         )
         self.con.commit()
+        self.update_tube_id()
 
 
 def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
