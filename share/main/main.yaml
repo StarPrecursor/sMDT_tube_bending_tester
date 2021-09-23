@@ -1,0 +1,31 @@
+main:
+
+    real_size: [97.5, 68]  # 16:9
+    aml: 20
+    threshold: 1.8  # mm 
+    interval: 50  # ms
+
+    scale_abs:
+        alpha: 2
+        beta: 50
+    gauss_blur:
+        ksize: [5, 5]
+        sigmaX: 1.5
+    canny:
+        threshold1: 100
+        threshold2: 50
+    dilate:
+        kernel: [5, 5]
+        iterations: 3
+    erode:
+        kernel: [3, 3]
+        iterations: 3
+    hough_line_p:
+        rho: 1
+        theta: 8.7e-4
+        threshold: 15
+        minLineLength: 40
+        maxLineGap: 10
+    style:
+        line_color: [255, 255, 0]
+

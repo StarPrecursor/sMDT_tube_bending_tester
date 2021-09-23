@@ -13,8 +13,10 @@ AMP = 20
 
 
 class Tube_Cache(object):
-    def __init__(self, base_img, real_size=(97.5, 68), aml=AMP, threshold=1.8) -> None:
+    def __init__(self, base_img, cfg) -> None:
         super().__init__()
+        cm = cfg.main
+        self.operator = cfg.job.operator
         # static members
         self.r_range = base_img.shape[0]  # row range
         self.c_range = base_img.shape[1]  # column range
@@ -22,9 +24,9 @@ class Tube_Cache(object):
         self.max_y = int(self.r_range * 0.25)
         self.mid_y = int(self.r_range * 0.5)
         self.base_img = np.zeros(base_img.shape, dtype=base_img.dtype)
-        self.real_size = real_size
-        self.unit_x = real_size[0] / self.c_range / aml
-        self.threshold = threshold
+        self.real_size = cm.real_size
+        self.unit_x = cm.real_size[0] / self.c_range / cm.aml
+        self.threshold = cm.threshold
         # dynamic members
         self.min_x = float("inf")
         self.max_x = -1
@@ -132,7 +134,7 @@ class Tube_Cache(object):
         self.cur = self.con.cursor()
         # create [tubes] table if not exists
         self.cur.execute(
-            """CREATE TABLE IF NOT EXISTS tubes(box, date, time, tube_id, status, min_x, max_x, range_x, dy)"""
+            """CREATE TABLE IF NOT EXISTS tubes(box, date, time, operator, tube_id, status, up_pix, low_pix, dy, threshold, unit_x)"""
         )
 
     def disconnect_db(self):
@@ -141,20 +143,28 @@ class Tube_Cache(object):
     def write_db(self, tube_id=-1):
         dt_string = datetime.today().strftime("%Y/%m/%d")
         time_string = datetime.now().strftime("%H:%M:%S")
+        max_id = self.cur.execute("SELECT MAX(tube_id) FROM tubes").fetchall()
+        max_id = max_id[0][0]
+        if max_id is None:
+            max_id = 0
+        if tube_id == -1:
+            tube_id = max_id + 1
         values = (
             self.box,
             dt_string,
             time_string,
+            " & ".join(self.operator),
             tube_id,
             self.status,
-            self.min_x,
             self.max_x,
-            self.range_x,
+            self.min_x,
             self.dy,
+            self.threshold,
+            self.unit_x,
         )
         logger.debug(f"Inserting values ...")
         self.cur.execute(
-            "INSERT INTO tubes (box, date, time, tube_id, status, min_x, max_x, range_x, dy) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO tubes (box, date, time, operator, tube_id, status, up_pix, low_pix, dy, threshold, unit_x) Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             values,
         )
         self.con.commit()
