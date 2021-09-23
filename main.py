@@ -1,8 +1,8 @@
 import argparse
 import logging
 import time
-import winsound
 
+import beepy
 import cv2
 
 import config
@@ -79,9 +79,10 @@ while True:
 
     # React to keyboard inputs
     if ky == ord("\r"):
-        if status != "PASS":
-            print("\a")
-            # winsound.Beep(2500, 1000)
+        if status == "PASS":
+            beepy.beep(sound=1)
+        else:
+            beepy.beep(sound=3)
         logger.info(f"New test: status = {status}, dy = {dy * 1000:05f} um")
         tube_cache.write_db()
     elif ky == ord("r"):
