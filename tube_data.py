@@ -126,14 +126,9 @@ class Tube_Cache(object):
                 color_s = (0, 0, 255)
             org = (self.c_range // 2 - 80, self.r_range - 20)
             img = cv2.putText(
-                img,
-                status,
-                org,
-                cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                3,
-                color_s,
+                img, status, org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, color_s,
             )
-            
+
             # update tube measurement
             self.status = status
             self.dy = dy
@@ -171,7 +166,6 @@ class Tube_Cache(object):
                 max_id = 0
             self.tube_id = max_id + 1
 
-
     def write_db(self, tube_id=-1):
         dt_string = datetime.today().strftime("%Y/%m/%d")
         time_string = datetime.now().strftime("%H:%M:%S")
@@ -198,34 +192,21 @@ class Tube_Cache(object):
         self.con.commit()
         self.update_tube_id()
 
+    def delete_db(self):
+        self.cur.execute(
+            "DELETE FROM tubes WHERE tube_id = (SELECT MAX(tube_id) FROM tubes)"
+        )
+        self.update_tube_id()
+
 
 def plot_arrow(img, p1, p2, dist, org, color, thickness=1):
     img = cv2.arrowedLine(
-        img,
-        p1,
-        p2,
-        color,
-        thickness=thickness,
-        line_type=8,
-        shift=0,
-        tipLength=0.05,
+        img, p1, p2, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
     )
     img = cv2.arrowedLine(
-        img,
-        p2,
-        p1,
-        color,
-        thickness=thickness,
-        line_type=8,
-        shift=0,
-        tipLength=0.05,
+        img, p2, p1, color, thickness=thickness, line_type=8, shift=0, tipLength=0.05,
     )
     img = cv2.putText(
-        img,
-        f"{(dist):.02f} mm",
-        org,
-        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-        1,
-        color,
+        img, f"{(dist):.02f} mm", org, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,
     )
     return img

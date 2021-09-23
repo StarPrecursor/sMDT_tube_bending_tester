@@ -1,8 +1,28 @@
-import cv2
-import numpy as np
 import logging
 
+import cv2
+import numpy as np
+from pygame import mixer
+
+mixer.init()
 logger = logging.getLogger()
+
+
+class Test_Sound(object):
+    def __init__(self) -> None:
+        super().__init__()
+        self.add_sound = mixer.Sound("res/add.mp3")
+        self.remove_sound = mixer.Sound("res/remove.mp3")
+        self.error_sound = mixer.Sound("res/error.mp3")
+
+    def add(self):
+        self.add_sound.play()
+
+    def remove(self):
+        self.remove_sound.play()
+
+    def error(self):
+        self.error_sound.play()
 
 
 def get_border(img, cfg, debug=False):

@@ -8,7 +8,7 @@ Assistant tester for sMDT tube bending test with OpenCV
 - install dependent packages:
 
   ```shell
-  pip install numpy opencv-python beepy
+  pip install numpy opencv-python pygame
   ```
 
 - run example

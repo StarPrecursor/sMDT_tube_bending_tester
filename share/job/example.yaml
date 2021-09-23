@@ -7,6 +7,9 @@ job:
     webcam: False
     webcam_id: 1
     video_path: "./example_data/exp_video.mp4"
+    dsize: [0, 0]
+    fx: 0.5
+    fy: 0.5
 
     use_img: False
     img_path: None

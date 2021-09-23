@@ -2,7 +2,6 @@ import argparse
 import logging
 import time
 
-import beepy
 import cv2
 
 import config
@@ -42,6 +41,7 @@ cfg.update(job)
 start_time = time.perf_counter()
 cj = cfg.job
 tube_cache = None
+test_sound = utils.Test_Sound()
 if cj.webcam:
     cap = cv2.VideoCapture(cj.webcam_id)
 else:
@@ -55,7 +55,7 @@ while True:
     else:
         break
     if img is not None:
-        img = cv2.resize(img, (0, 0), None, 0.5, 0.5)
+        img = cv2.resize(img, cj.dsize, None, cj.fx, cj.fy)
     else:
         logger.critical("no video captured")
         break
@@ -80,11 +80,14 @@ while True:
     # React to keyboard inputs
     if ky == ord("\r"):
         if status == "PASS":
-            beepy.beep(sound=1)
+            test_sound.add()
         else:
-            beepy.beep(sound=3)
+            test_sound.error()
         logger.info(f"New test: status = {status}, dy = {dy * 1000:05f} um")
         tube_cache.write_db()
+    elif ky == ord("d"):
+        test_sound.remove()
+        tube_cache.delete_db()
     elif ky == ord("r"):
         logger.info("Resetting tube data")
         tube_cache.reset_x()
