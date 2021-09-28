@@ -196,6 +196,7 @@ class Tube_Cache(object):
         self.cur.execute(
             "DELETE FROM tubes WHERE tube_id = (SELECT MAX(tube_id) FROM tubes)"
         )
+        self.con.commit()
         self.update_tube_id()
 
 

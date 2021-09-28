@@ -85,8 +85,10 @@ while True:
             test_sound.error()
         logger.info(f"New test: status = {status}, dy = {dy * 1000:05f} um")
         tube_cache.write_db()
+        tube_cache.reset_x()
     elif ky == ord("d"):
         test_sound.remove()
+        logger.info(f"Deleting last entry")
         tube_cache.delete_db()
     elif ky == ord("r"):
         logger.info("Resetting tube data")
