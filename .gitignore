@@ -4,4 +4,4 @@ test/*
 *.pyc
 
 # run folder
-run/*
+run/test*
