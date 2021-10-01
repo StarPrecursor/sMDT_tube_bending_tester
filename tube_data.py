@@ -62,9 +62,10 @@ class Tube_Cache(object):
             1,
             (0, 255, 0),
         )
+        l, c = 1 + (self.tube_id - 1) // 27, 1 + (self.tube_id - 1) % 27
         img = cv2.putText(
             img,
-            f"TUBE: {self.tube_id}",
+            f"TUBE: {self.tube_id} (l={l}, c={c})",
             (10, 40),
             cv2.FONT_HERSHEY_COMPLEX_SMALL,
             1,
