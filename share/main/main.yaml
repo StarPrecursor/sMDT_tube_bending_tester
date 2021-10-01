@@ -2,7 +2,8 @@ main:
 
     real_size: [97.5, 68]  # 16:9
     aml: 20
-    threshold: 1.75  # mm 
+    #threshold: 1.75  # mm 
+    threshold: 1.45  # mm 
     interval: 50  # ms
 
     scale_abs:
@@ -29,3 +30,9 @@ main:
     style:
         line_color: [255, 255, 0]
 
+
+    # Auto Mode settings
+    test_delay: 2  # second
+    stable_period: 3 # second
+    rapid_change_reject: 0.2 # mm
+    record_delay: 2  # second

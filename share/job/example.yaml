@@ -1,6 +1,6 @@
 job:
     output_dir: "./run"
-    box_id: "000000"
+    box_id: "exp"
     operator: ["Zhe Yang", "Zirui Wang"]
 
     use_video: True
