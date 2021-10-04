@@ -140,9 +140,17 @@ while True:
         )
     cv2.imshow("Monitor", display_img)
 
+end_time = time.perf_counter()
+time_consumed = end_time - start_time
+time_consumed_str = time.strftime("%H:%M:%S", time.gmtime(time_consumed))
+logger.info(f"Time consumed: {time_consumed_str}")
+logger.info("#" * 80)
 
 # Release and Disconnect
 cap.release()
 cv2.destroyAllWindows()
 if tube_cache:
     tube_cache.disconnect_db()
+
+logger.info("Done!")
+logger.info("#" * 80)
