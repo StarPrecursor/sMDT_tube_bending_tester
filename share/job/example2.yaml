@@ -4,7 +4,7 @@ job:
     operator: ["Zhe Yang"]
 
     use_video: True
-    webcam: True
+    webcam: False
     webcam_id: 0
     video_path: "./example_data/exp_video2.mp4"
     dsize: [0, 0]
