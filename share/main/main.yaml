@@ -3,7 +3,8 @@ main:
     real_size: [97.5, 68]  # 16:9
     aml: 20
     #threshold: 1.75  # mm 
-    threshold: 1.45  # mm 
+    threshold: 1.7  # mm 
+    #threshold: 1.45  # mm 
     interval: 50  # ms
 
     scale_abs:
