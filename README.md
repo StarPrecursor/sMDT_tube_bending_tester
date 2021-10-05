@@ -14,10 +14,16 @@ Assistant tester for sMDT tube bending test with OpenCV
 - run example
 
   ```shell
-  python main.py
+  python main.py share/job/example.yaml
   ```
 
-  in real measurement, press **ENTER** to go to next tube (will clear cache), press **"q"** to exit
+  in real measurement, press **ENTER** to go to next tube (will clear cache), press **"r"** to reset, press **"q"** to exit
+
+- run example of auto-mode
+
+  ```shell
+  python main.py -a share/job/example2.yaml
+  ```
 
 ## Key Components
 
