@@ -5,7 +5,7 @@ job:
 
     use_video: True
     webcam: True
-    webcam_id: 1
+    webcam_id: 0
     dsize: [0, 0]
     fx: 0.5
     fy: 0.5
