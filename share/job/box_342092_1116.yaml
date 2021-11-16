@@ -1,0 +1,14 @@
+job:
+    output_dir: "./run"
+    box_id: "342092"
+    operator: ["Zhe Yang, Zirui Wang"]
+
+    use_video: True
+    webcam: True
+    webcam_id: 1
+    dsize: [0, 0]
+    fx: 0.5
+    fy: 0.5
+
+    use_img: False
+    img_path: None
